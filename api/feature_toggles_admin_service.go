@@ -48,9 +48,6 @@ func (p *FeatureTogglesService) GetFeatureByName(projectId string, featureName s
 	if err != nil {
 		return nil, resp, err
 	}
-	if feature.Name != featureName {
-		return nil, resp, ErrNotFound
-	}
 	return &feature, resp, err
 }
 

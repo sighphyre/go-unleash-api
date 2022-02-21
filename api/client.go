@@ -15,13 +15,18 @@ import (
 type ApiClient struct {
 	apiUrl    *url.URL
 	authToken string
-	client    *http.Client
+	client    HTTPClient
 	UserAgent string
 
 	FeatureToggles *FeatureTogglesService
 	Projects       *ProjectsService
 	FeatureTypes   *FeatureTypesService
 	Strategies     *StrategiesService
+}
+
+// HTTPClient interface
+type HTTPClient interface {
+	Do(req *http.Request) (*http.Response, error)
 }
 
 const (
@@ -51,7 +56,7 @@ func (c *ApiClient) SetAuthToken(authToken string) error {
 	return nil
 }
 
-func NewClient(httpClient *http.Client, apiUrl string, authToken string) (*ApiClient, error) {
+func NewClient(httpClient HTTPClient, apiUrl string, authToken string) (*ApiClient, error) {
 	if httpClient == nil {
 		httpClient = &http.Client{
 			Transport: &http.Transport{

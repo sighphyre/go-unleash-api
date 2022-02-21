@@ -31,7 +31,6 @@ type StrategiesService struct {
 	client *ApiClient
 }
 
-// Creates a strategy
 func (p *StrategiesService) CreateStrategy(strategy Strategy) (*Strategy, *Response, error) {
 	req, _ := p.client.newRequest("admin/strategies", "POST", strategy)
 
@@ -44,7 +43,6 @@ func (p *StrategiesService) CreateStrategy(strategy Strategy) (*Strategy, *Respo
 	return &createdStrategy, resp, err
 }
 
-// Updates a strategy
 func (p *StrategiesService) UpdateStrategy(strategy Strategy) (*Strategy, *Response, error) {
 	req, _ := p.client.newRequest("admin/strategies/"+strategy.Name, "PUT", strategy)
 
@@ -57,7 +55,6 @@ func (p *StrategiesService) UpdateStrategy(strategy Strategy) (*Strategy, *Respo
 	return &updatedStrategy, resp, err
 }
 
-// Deprecates a strategy
 func (p *FeatureTogglesService) DeprecateStrategy(strategyName string) (bool, *Response, error) {
 	req, err := p.client.newRequest("admin/strategies/"+strategyName+"/deprecate", "POST", nil)
 	if err != nil {
@@ -73,7 +70,6 @@ func (p *FeatureTogglesService) DeprecateStrategy(strategyName string) (bool, *R
 	return true, resp, nil
 }
 
-// Reactivate a strategy
 func (p *FeatureTogglesService) ReactivateStrategy(strategyName string) (bool, *Response, error) {
 	req, err := p.client.newRequest("admin/strategies/"+strategyName+"/reactivate", "POST", nil)
 	if err != nil {
@@ -89,7 +85,6 @@ func (p *FeatureTogglesService) ReactivateStrategy(strategyName string) (bool, *
 	return true, resp, nil
 }
 
-// Retrieves all strategies
 func (p *StrategiesService) GetAllStrategies() (*AllStrategiesResponse, *Response, error) {
 	req, err := p.client.newRequest("admin/strategies", "GET", nil)
 	if err != nil {
