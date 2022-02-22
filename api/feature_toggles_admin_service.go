@@ -37,10 +37,7 @@ type FeatureTogglesService struct {
 }
 
 func (p *FeatureTogglesService) GetFeatureByName(projectId string, featureName string) (*FeatureToggle, *Response, error) {
-	req, err := p.client.newRequest("admin/projects/"+projectId+"/features/"+featureName, "GET", nil)
-	if err != nil {
-		return nil, nil, err
-	}
+	req, _ := p.client.newRequest("admin/projects/"+projectId+"/features/"+featureName, "GET", nil)
 
 	var feature FeatureToggle
 
@@ -52,7 +49,10 @@ func (p *FeatureTogglesService) GetFeatureByName(projectId string, featureName s
 }
 
 func (p *FeatureTogglesService) CreateFeature(projectId string, feature FeatureToggle) (*FeatureToggle, *Response, error) {
-	req, _ := p.client.newRequest("admin/projects/"+projectId+"/features", "POST", feature)
+	req, err := p.client.newRequest("admin/projects/"+projectId+"/features", "POST", feature)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	var createdFeature FeatureToggle
 
@@ -64,7 +64,10 @@ func (p *FeatureTogglesService) CreateFeature(projectId string, feature FeatureT
 }
 
 func (p *FeatureTogglesService) UpdateFeature(projectId string, feature FeatureToggle) (*FeatureToggle, *Response, error) {
-	req, _ := p.client.newRequest("admin/projects/"+projectId+"/features/"+feature.Name, "PUT", feature)
+	req, err := p.client.newRequest("admin/projects/"+projectId+"/features/"+feature.Name, "PUT", feature)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	var updatedFeature FeatureToggle
 
@@ -76,10 +79,7 @@ func (p *FeatureTogglesService) UpdateFeature(projectId string, feature FeatureT
 }
 
 func (p *FeatureTogglesService) ArchiveFeature(projectId string, featureName string) (bool, *Response, error) {
-	req, err := p.client.newRequest("admin/projects/"+projectId+"/features/"+featureName, "DELETE", nil)
-	if err != nil {
-		return false, nil, err
-	}
+	req, _ := p.client.newRequest("admin/projects/"+projectId+"/features/"+featureName, "DELETE", nil)
 
 	var deleteResponse bytes.Buffer
 
@@ -91,10 +91,7 @@ func (p *FeatureTogglesService) ArchiveFeature(projectId string, featureName str
 }
 
 func (p *FeatureTogglesService) GetFeaturesByProject(projectId string) (*[]FeatureToggle, *Response, error) {
-	req, err := p.client.newRequest("admin/projects/"+projectId+"/features", "GET", nil)
-	if err != nil {
-		return nil, nil, err
-	}
+	req, _ := p.client.newRequest("admin/projects/"+projectId+"/features", "GET", nil)
 
 	var features []FeatureToggle
 
@@ -107,7 +104,10 @@ func (p *FeatureTogglesService) GetFeaturesByProject(projectId string) (*[]Featu
 
 // Adds a strategy to a feature toggle in a given environment
 func (p *FeatureTogglesService) AddStrategyToFeature(projectId string, featureName string, environment string, featureStrategy FeatureStrategy) (*FeatureStrategy, *Response, error) {
-	req, _ := p.client.newRequest("admin/projects/"+projectId+"/features/"+featureName+"/environments/"+environment+"/strategies", "POST", featureStrategy)
+	req, err := p.client.newRequest("admin/projects/"+projectId+"/features/"+featureName+"/environments/"+environment+"/strategies", "POST", featureStrategy)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	var addedStrategy FeatureStrategy
 
@@ -119,7 +119,10 @@ func (p *FeatureTogglesService) AddStrategyToFeature(projectId string, featureNa
 }
 
 func (p *FeatureTogglesService) UpdateFeatureStrategy(projectId string, featureName string, environment string, featureStrategy FeatureStrategy) (*FeatureStrategy, *Response, error) {
-	req, _ := p.client.newRequest("admin/projects/"+projectId+"/features/"+featureName+"/environments/"+environment+"/strategies/"+featureStrategy.ID, "PUT", featureStrategy)
+	req, err := p.client.newRequest("admin/projects/"+projectId+"/features/"+featureName+"/environments/"+environment+"/strategies/"+featureStrategy.ID, "PUT", featureStrategy)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	var updatedStrategy FeatureStrategy
 
@@ -150,10 +153,7 @@ func (p *FeatureTogglesService) EnableFeatureOnEnvironment(projectId string, fea
 	} else {
 		featureState = "off"
 	}
-	req, err := p.client.newRequest("admin/projects/"+projectId+"/features/"+featureName+"/environments/"+environment+"/"+featureState, "POST", nil)
-	if err != nil {
-		return false, nil, err
-	}
+	req, _ := p.client.newRequest("admin/projects/"+projectId+"/features/"+featureName+"/environments/"+environment+"/"+featureState, "POST", nil)
 
 	var response bytes.Buffer
 

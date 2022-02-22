@@ -33,7 +33,7 @@ const (
 	userAgent = "go-unleash-api/api/" + LibraryVersion
 )
 
-func (c *ApiClient) SetApiUrl(urlStr string) error {
+func (c *ApiClient) setApiUrl(urlStr string) error {
 	if urlStr == "" {
 		return ErrApiUrlCannotBeEmpty
 	}
@@ -47,7 +47,7 @@ func (c *ApiClient) SetApiUrl(urlStr string) error {
 	return err
 }
 
-func (c *ApiClient) SetAuthToken(authToken string) error {
+func (c *ApiClient) setAuthToken(authToken string) error {
 	if authToken == "" {
 		return ErrTokenAuthCannotBeEmpty
 	}
@@ -65,10 +65,10 @@ func NewClient(httpClient HTTPClient, apiUrl string, authToken string) (*ApiClie
 		}
 	}
 	c := &ApiClient{}
-	if err := c.SetApiUrl(apiUrl); err != nil {
+	if err := c.setApiUrl(apiUrl); err != nil {
 		return nil, err
 	}
-	if err := c.SetAuthToken(authToken); err != nil {
+	if err := c.setAuthToken(authToken); err != nil {
 		return nil, err
 	}
 

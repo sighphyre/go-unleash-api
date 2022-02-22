@@ -17,10 +17,7 @@ type FeatureTypesService struct {
 }
 
 func (p *FeatureTypesService) GetAllFeatureTypes() (*AllFeatureTypesResponse, *Response, error) {
-	req, err := p.client.newRequest("admin/feature-types", "GET", nil)
-	if err != nil {
-		return nil, nil, err
-	}
+	req, _ := p.client.newRequest("admin/feature-types", "GET", nil)
 
 	var featureTypes AllFeatureTypesResponse
 

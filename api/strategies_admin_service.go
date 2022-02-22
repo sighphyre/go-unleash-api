@@ -32,7 +32,10 @@ type StrategiesService struct {
 }
 
 func (p *StrategiesService) CreateStrategy(strategy Strategy) (*Strategy, *Response, error) {
-	req, _ := p.client.newRequest("admin/strategies", "POST", strategy)
+	req, err := p.client.newRequest("admin/strategies", "POST", strategy)
+	if err != nil {
+		return nil, nil, err
+	}
 
 	var createdStrategy Strategy
 
@@ -56,10 +59,7 @@ func (p *StrategiesService) UpdateStrategy(strategy Strategy) (*Strategy, *Respo
 }
 
 func (p *FeatureTogglesService) DeprecateStrategy(strategyName string) (bool, *Response, error) {
-	req, err := p.client.newRequest("admin/strategies/"+strategyName+"/deprecate", "POST", nil)
-	if err != nil {
-		return false, nil, err
-	}
+	req, _ := p.client.newRequest("admin/strategies/"+strategyName+"/deprecate", "POST", nil)
 
 	var deprecateResponse bytes.Buffer
 
@@ -71,10 +71,7 @@ func (p *FeatureTogglesService) DeprecateStrategy(strategyName string) (bool, *R
 }
 
 func (p *FeatureTogglesService) ReactivateStrategy(strategyName string) (bool, *Response, error) {
-	req, err := p.client.newRequest("admin/strategies/"+strategyName+"/reactivate", "POST", nil)
-	if err != nil {
-		return false, nil, err
-	}
+	req, _ := p.client.newRequest("admin/strategies/"+strategyName+"/reactivate", "POST", nil)
 
 	var reactivateResponse bytes.Buffer
 
@@ -86,10 +83,7 @@ func (p *FeatureTogglesService) ReactivateStrategy(strategyName string) (bool, *
 }
 
 func (p *StrategiesService) GetAllStrategies() (*AllStrategiesResponse, *Response, error) {
-	req, err := p.client.newRequest("admin/strategies", "GET", nil)
-	if err != nil {
-		return nil, nil, err
-	}
+	req, _ := p.client.newRequest("admin/strategies", "GET", nil)
 
 	var strategies AllStrategiesResponse
 
@@ -101,10 +95,7 @@ func (p *StrategiesService) GetAllStrategies() (*AllStrategiesResponse, *Respons
 }
 
 func (p *StrategiesService) GetStrategyByName(strategyName string) (*Strategy, *Response, error) {
-	req, err := p.client.newRequest("admin/strategies/"+strategyName, "GET", nil)
-	if err != nil {
-		return nil, nil, err
-	}
+	req, _ := p.client.newRequest("admin/strategies/"+strategyName, "GET", nil)
 
 	var strategy Strategy
 

@@ -13,10 +13,7 @@ type ProjectsService struct {
 }
 
 func (p *ProjectsService) GetProjectById(projectId string) (*ProjectDetails, *Response, error) {
-	req, err := p.client.newRequest("admin/projects/"+projectId, "GET", nil)
-	if err != nil {
-		return nil, nil, err
-	}
+	req, _ := p.client.newRequest("admin/projects/"+projectId, "GET", nil)
 
 	var project ProjectDetails
 

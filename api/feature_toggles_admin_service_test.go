@@ -8,7 +8,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/jdelucaa/go-unleash-api/mocks"
+	"github.com/philips-labs/go-unleash-api/mocks"
 )
 
 var (
@@ -28,15 +28,8 @@ func init() {
 
 func TestFeatureTogglesService_GetFeatureByName(t *testing.T) {
 	httpResponseMocks := make(map[string]*http.Response)
-	httpResponseMocks["success"] = &http.Response{
-		StatusCode: 200,
-		Body:       ioutil.NopCloser(bytes.NewReader([]byte(`{"name":"MyToggle","project":"default"}`))),
-	}
-	httpResponseMocks["notfound"] = &http.Response{
-		StatusCode: 404,
-		Body:       ioutil.NopCloser(bytes.NewReader([]byte(`{"name":"NotFoundError"`))),
-		Request:    &http.Request{Method: "GET", RequestURI: "local"},
-	}
+	httpResponseMocks["success"] = createHttpResponseMock(200, `{"name":"MyToggle","project":"default"}`, "GET")
+	httpResponseMocks["notfound"] = createHttpResponseMock(404, `{"name":"NotFoundError"`, "GET")
 	type args struct {
 		projectId   string
 		featureName string
@@ -66,7 +59,7 @@ func TestFeatureTogglesService_GetFeatureByName(t *testing.T) {
 			false,
 		},
 		{
-			"ReturnsNotFoundError",
+			"ReturnsError",
 			featureTogglesService,
 			args{
 				projectId:   "default",
@@ -95,5 +88,13 @@ func TestFeatureTogglesService_GetFeatureByName(t *testing.T) {
 				t.Errorf("FeatureTogglesService.GetFeatureByName() got1 = %v, want %v", got1, tt.wantResponse)
 			}
 		})
+	}
+}
+
+func createHttpResponseMock(statusCode int, body string, requestMethod string) *http.Response {
+	return &http.Response{
+		StatusCode: statusCode,
+		Body:       ioutil.NopCloser(bytes.NewReader([]byte(body))),
+		Request:    &http.Request{Method: requestMethod, RequestURI: "local"},
 	}
 }
