@@ -27,12 +27,12 @@ func init() {
 }
 
 func TestFeatureTogglesService_GetFeatureByName(t *testing.T) {
-	GetFeatureByNameMocks := make(map[string]*http.Response)
-	GetFeatureByNameMocks["success"] = &http.Response{
+	httpResponseMocks := make(map[string]*http.Response)
+	httpResponseMocks["success"] = &http.Response{
 		StatusCode: 200,
 		Body:       ioutil.NopCloser(bytes.NewReader([]byte(`{"name":"MyToggle","project":"default"}`))),
 	}
-	GetFeatureByNameMocks["notfound"] = &http.Response{
+	httpResponseMocks["notfound"] = &http.Response{
 		StatusCode: 404,
 		Body:       ioutil.NopCloser(bytes.NewReader([]byte(`{"name":"NotFoundError"`))),
 		Request:    &http.Request{Method: "GET", RequestURI: "local"},
@@ -57,12 +57,12 @@ func TestFeatureTogglesService_GetFeatureByName(t *testing.T) {
 				projectId:   "default",
 				featureName: "MyToggle",
 			},
-			GetFeatureByNameMocks["success"],
+			httpResponseMocks["success"],
 			&FeatureToggle{
 				Project: "default",
 				Name:    "MyToggle",
 			},
-			&Response{Response: GetFeatureByNameMocks["success"]},
+			&Response{Response: httpResponseMocks["success"]},
 			false,
 		},
 		{
@@ -72,9 +72,9 @@ func TestFeatureTogglesService_GetFeatureByName(t *testing.T) {
 				projectId:   "default",
 				featureName: "foo",
 			},
-			GetFeatureByNameMocks["notfound"],
+			httpResponseMocks["notfound"],
 			nil,
-			&Response{Response: GetFeatureByNameMocks["notfound"]},
+			&Response{Response: httpResponseMocks["notfound"]},
 			true,
 		},
 	}
