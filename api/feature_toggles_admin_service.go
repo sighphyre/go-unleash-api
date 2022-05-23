@@ -15,6 +15,7 @@ type FeatureToggle struct {
 	Stale        bool          `json:"stale"`
 	Type         string        `json:"type"`
 	Environments []Environment `json:"environments"`
+	Variants     []Variant     `json:"variants"`
 }
 
 type FeatureStrategy struct {
@@ -23,6 +24,25 @@ type FeatureStrategy struct {
 	Constraints []string    `json:"constraints,omitempty"`
 	Parameters  interface{} `json:"parameters,omitempty"`
 	SortOrder   int         `json:"sortOrder"`
+}
+
+type Variant struct {
+	Name       string            `json:"name"`
+	Stickiness string            `json:"stickiness"`
+	Weight     string            `json:"weight"`
+	WeightType string            `json:"weightType"`
+	Overrides  []VariantOverride `json:"overrides,omitempty"`
+	Payload    VariantPayload    `json:"payload,omitempty"`
+}
+
+type VariantOverride struct {
+	ContextName string   `json:"contextName"`
+	Values      []string `json:"values"`
+}
+
+type VariantPayload struct {
+	Type  string `json:"type"`
+	Value string `json:"value"`
 }
 
 type Environment struct {
