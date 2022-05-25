@@ -29,7 +29,7 @@ type FeatureStrategy struct {
 type Variant struct {
 	Name       string            `json:"name"`
 	Stickiness string            `json:"stickiness"`
-	Weight     string            `json:"weight"`
+	Weight     int               `json:"weight"`
 	WeightType string            `json:"weightType"`
 	Overrides  []VariantOverride `json:"overrides,omitempty"`
 	Payload    VariantPayload    `json:"payload,omitempty"`
