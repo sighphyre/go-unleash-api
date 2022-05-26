@@ -32,7 +32,7 @@ type Variant struct {
 	Weight     int               `json:"weight"`
 	WeightType string            `json:"weightType"`
 	Overrides  []VariantOverride `json:"overrides,omitempty"`
-	Payload    VariantPayload    `json:"payload,omitempty"`
+	Payload    *VariantPayload   `json:"payload,omitempty"`
 }
 
 type VariantOverride struct {
