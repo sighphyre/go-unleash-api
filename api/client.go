@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"reflect"
 	"strings"
 
 	"github.com/google/go-querystring/query"
@@ -88,7 +89,7 @@ func (c *ApiClient) newRequest(path string, method string, opt interface{}) (*ht
 	var u = *c.apiUrl
 	u.Opaque = c.apiUrl.Path + path
 
-	if opt != nil {
+	if opt != nil && isStruct(opt) {
 		q, err := query.Values(opt)
 		if err != nil {
 			return nil, err
@@ -107,7 +108,7 @@ func (c *ApiClient) newRequest(path string, method string, opt interface{}) (*ht
 	}
 	req.Header.Set("User-Agent", userAgent)
 
-	if method == "POST" || method == "PUT" {
+	if (method == "POST" || method == "PUT") && opt != nil {
 		bodyBytes, err := json.Marshal(opt)
 		if err != nil {
 			return nil, err
@@ -160,4 +161,8 @@ func (c *ApiClient) do(req *http.Request, v interface{}) (*Response, error) {
 	}
 
 	return response, err
+}
+
+func isStruct(s interface{}) bool {
+	return reflect.ValueOf(s).Kind() == reflect.Struct
 }
