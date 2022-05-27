@@ -108,7 +108,7 @@ func (c *ApiClient) newRequest(path string, method string, opt interface{}) (*ht
 	}
 	req.Header.Set("User-Agent", userAgent)
 
-	if (method == "POST" || method == "PUT") && opt != nil {
+	if method == "POST" || method == "PUT" {
 		bodyBytes, err := json.Marshal(opt)
 		if err != nil {
 			return nil, err
