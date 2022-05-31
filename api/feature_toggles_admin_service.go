@@ -110,6 +110,18 @@ func (p *FeatureTogglesService) ArchiveFeature(projectId string, featureName str
 	return true, resp, nil
 }
 
+func (p *FeatureTogglesService) DeleteArchivedFeature(featureName string) (bool, *Response, error) {
+	req, _ := p.client.newRequest("admin/archive/"+featureName, "DELETE", nil)
+
+	var deleteResponse bytes.Buffer
+
+	resp, err := p.client.do(req, &deleteResponse)
+	if resp == nil || resp.StatusCode != http.StatusAccepted {
+		return false, resp, err
+	}
+	return true, resp, nil
+}
+
 func (p *FeatureTogglesService) GetFeaturesByProject(projectId string) (*[]FeatureToggle, *Response, error) {
 	req, _ := p.client.newRequest("admin/projects/"+projectId+"/features", "GET", nil)
 
