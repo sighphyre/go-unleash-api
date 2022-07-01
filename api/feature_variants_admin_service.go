@@ -1,7 +1,7 @@
 package api
 
 type VariantsResponse struct {
-	Version  string    `json:"version"`
+	Version  int       `json:"version"`
 	Variants []Variant `json:"variants"`
 }
 
