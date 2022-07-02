@@ -59,7 +59,7 @@ func (p *StrategiesService) UpdateStrategy(strategy Strategy) (*Strategy, *Respo
 }
 
 func (p *FeatureTogglesService) DeprecateStrategy(strategyName string) (bool, *Response, error) {
-	req, _ := p.client.newRequest("admin/strategies/"+strategyName+"/deprecate", "POST", nil)
+	req, _ := p.client.newRequest("admin/strategies/"+strategyName+"/deprecate", "POST", FeatureToggle{})
 
 	var deprecateResponse bytes.Buffer
 
@@ -71,7 +71,7 @@ func (p *FeatureTogglesService) DeprecateStrategy(strategyName string) (bool, *R
 }
 
 func (p *FeatureTogglesService) ReactivateStrategy(strategyName string) (bool, *Response, error) {
-	req, _ := p.client.newRequest("admin/strategies/"+strategyName+"/reactivate", "POST", nil)
+	req, _ := p.client.newRequest("admin/strategies/"+strategyName+"/reactivate", "POST", FeatureToggle{})
 
 	var reactivateResponse bytes.Buffer
 

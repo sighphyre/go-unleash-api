@@ -185,7 +185,7 @@ func (p *FeatureTogglesService) EnableFeatureOnEnvironment(projectId string, fea
 	} else {
 		featureState = "off"
 	}
-	req, _ := p.client.newRequest("admin/projects/"+projectId+"/features/"+featureName+"/environments/"+environment+"/"+featureState, "POST", nil)
+	req, _ := p.client.newRequest("admin/projects/"+projectId+"/features/"+featureName+"/environments/"+environment+"/"+featureState, "POST", FeatureToggle{})
 
 	var response bytes.Buffer
 
