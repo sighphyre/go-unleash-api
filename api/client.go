@@ -25,6 +25,7 @@ type ApiClient struct {
 	Strategies     *StrategiesService
 	Variants       *VariantsService
 	Users          *UsersService
+	ApiTokens      *ApiTokenService
 }
 
 // HTTPClient interface
@@ -83,6 +84,7 @@ func NewClient(httpClient HTTPClient, apiUrl string, authToken string) (*ApiClie
 	c.Strategies = &StrategiesService{client: c}
 	c.Variants = &VariantsService{client: c}
 	c.Users = &UsersService{client: c}
+	c.ApiTokens = &ApiTokenService{client: c}
 
 	return c, nil
 }
