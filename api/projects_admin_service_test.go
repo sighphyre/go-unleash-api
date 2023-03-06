@@ -86,3 +86,204 @@ func TestProjectsService_GetProjectById(t *testing.T) {
 		})
 	}
 }
+
+func TestProjectsService_CreateProject(t *testing.T) {
+	httpResponseMocks := make(map[string]*http.Response)
+	httpResponseMocks["success"] = createHttpResponseMock(200, `{"id":"Default","name":"Default project","description":"Default project"}`, "POST")
+	httpResponseMocks["notfound"] = createHttpResponseMock(404, `{"name":"NotFoundError"`, "POST")
+	type args struct {
+		Id          string
+		Name        string
+		Description string
+	}
+	tests := []struct {
+		name           string
+		p              *ProjectsService
+		args           args
+		mockedResponse *http.Response
+		wantProject    *ProjectInfo
+		wantResponse   *Response
+		wantErr        bool
+	}{
+		{
+			"SuccessfulRequest",
+			projectsService,
+			args{
+				Id:          "Default",
+				Name:        "Default",
+				Description: "Default project",
+			},
+			httpResponseMocks["success"],
+			&ProjectInfo{
+				Id:          "Default",
+				Name:        "Default project",
+				Description: "Default project",
+			},
+			&Response{Response: httpResponseMocks["success"]},
+			false,
+		},
+		{
+			"ReturnsError",
+			projectsService,
+			args{
+				Id:          "Default",
+				Name:        "Default",
+				Description: "Default project",
+			},
+			httpResponseMocks["notfound"],
+			nil,
+			&Response{Response: httpResponseMocks["notfound"]},
+			true,
+		},
+	}
+	for _, tt := range tests {
+		mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
+			return tt.mockedResponse, nil
+		}
+		t.Run(tt.name, func(t *testing.T) {
+			project := Project{
+				Id:          tt.args.Id,
+				Name:        tt.args.Name,
+				Description: tt.args.Description,
+			}
+			got, got1, err := tt.p.CreateProject(project)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("ProjectsService.CreateProject() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.wantProject) {
+				t.Errorf("ProjectsService.CreateProject() got = %v, want %v", got, tt.wantProject)
+			}
+			if !reflect.DeepEqual(got1, tt.wantResponse) {
+				t.Errorf("ProjectsService.CreateProject() got1 = %v, want %v", got1, tt.wantResponse)
+			}
+		})
+	}
+}
+
+func TestProjectsService_UpdateProject(t *testing.T) {
+	httpResponseMocks := make(map[string]*http.Response)
+	httpResponseMocks["success"] = createHttpResponseMock(200, `{"id":"Default","name":"Default project","description":"Default project"}`, "PUT")
+	httpResponseMocks["notfound"] = createHttpResponseMock(404, `{"name":"NotFoundError"`, "PUT")
+
+	type args struct {
+		Id          string
+		Name        string
+		Description string
+	}
+
+	tests := []struct {
+		name           string
+		p              *ProjectsService
+		args           args
+		mockedResponse *http.Response
+		wantProject    *ProjectInfo
+		wantResponse   *Response
+		wantErr        bool
+	}{
+		{
+			"SuccessfulRequest",
+			projectsService,
+			args{
+				Id:          "Default",
+				Name:        "Default",
+				Description: "Default project",
+			},
+			httpResponseMocks["success"],
+			&ProjectInfo{
+				Id:          "Default",
+				Name:        "Default project",
+				Description: "Default project",
+			},
+			&Response{Response: httpResponseMocks["success"]},
+			false,
+		},
+		{
+			"ReturnsError",
+			projectsService,
+			args{
+				Id:          "Default",
+				Name:        "Default",
+				Description: "Default project",
+			},
+			httpResponseMocks["notfound"],
+			nil,
+			&Response{Response: httpResponseMocks["notfound"]},
+			true,
+		},
+	}
+	for _, tt := range tests {
+		mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
+			return tt.mockedResponse, nil
+		}
+		t.Run(tt.name, func(t *testing.T) {
+			project := Project{
+				Id:          tt.args.Id,
+				Name:        tt.args.Name,
+				Description: tt.args.Description,
+			}
+			got, got1, err := tt.p.UpdateProject(tt.args.Id, project)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("ProjectsService.CreateProject() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.wantProject) {
+				t.Errorf("ProjectsService.CreateProject() got = %v, want %v", got, tt.wantProject)
+			}
+			if !reflect.DeepEqual(got1, tt.wantResponse) {
+				t.Errorf("ProjectsService.CreateProject() got1 = %v, want %v", got1, tt.wantResponse)
+			}
+		})
+	}
+}
+
+func TestProjectsService_DeleteProject(t *testing.T) {
+	httpResponseMocks := make(map[string]*http.Response)
+	httpResponseMocks["success"] = createHttpResponseMock(204, "", "DELETE")
+	httpResponseMocks["notfound"] = createHttpResponseMock(404, `{"name":"NotFoundError"}`, "DELETE")
+
+	type args struct {
+		projectId string
+	}
+
+	tests := []struct {
+		name           string
+		p              *ProjectsService
+		args           args
+		mockedResponse *http.Response
+		wantResponse   *Response
+		wantErr        bool
+	}{
+		{
+			"SuccessfulRequest",
+			projectsService,
+			args{"Default"},
+			httpResponseMocks["success"],
+			&Response{Response: httpResponseMocks["success"]},
+			false,
+		},
+		{
+			"ReturnsError",
+			projectsService,
+			args{"InvalidProjectID"},
+			httpResponseMocks["notfound"],
+			&Response{Response: httpResponseMocks["notfound"]},
+			true,
+		},
+	}
+
+	for _, tt := range tests {
+		mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
+			return tt.mockedResponse, nil
+		}
+
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := tt.p.DeleteProject(tt.args.projectId)
+
+			if (err != nil) != tt.wantErr {
+				t.Errorf("ProjectsService.DeleteProject() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+		})
+	}
+}
