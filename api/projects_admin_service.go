@@ -96,7 +96,7 @@ func (p *ProjectsService) UpdateProject(projectId string, project Project) (*Cre
 
 func (p *ProjectsService) DeleteProject(projectId string) (*Response, error) {
 	if projectId == "" {
-		return nil, ErrRequiredParam("projectID")
+		return nil, ErrRequiredParam("projectId")
 	}
 	req, err := p.client.newRequest("DELETE", "admin/projects/"+projectId, nil)
 	if err != nil {
@@ -122,9 +122,9 @@ func (p *ProjectsService) DeleteProject(projectId string) (*Response, error) {
 	return &deleteResponse, nil
 }
 
-func (p *ProjectsService) AddUserRole(userId int, projectId string, roleId int) (*AddUserRoleResponse, *Response, error) {
+func (p *ProjectsService) AddUserProject(userId int, projectId string, roleId int) (*AddUserRoleResponse, *Response, error) {
 	if projectId == "" {
-		return nil, nil, ErrRequiredParam("projectID")
+		return nil, nil, ErrRequiredParam("projectId")
 	}
 	if userId == 0 {
 		return nil, nil, ErrRequiredParam("userId")
@@ -158,15 +158,15 @@ func (p *ProjectsService) AddUserRole(userId int, projectId string, roleId int) 
 	return &addRoleResponse, resp, err
 }
 
-func (p *ProjectsService) UpdateUserRole(projectId string, userId int, roleId int) (*AddUserRoleResponse, *Response, error) {
+func (p *ProjectsService) UpdateUserProject(projectId string, userId int, roleId int) (*AddUserRoleResponse, *Response, error) {
 	if projectId == "" {
-		return nil, nil, ErrRequiredParam("projectID")
+		return nil, nil, ErrRequiredParam("projectId")
 	}
 	if userId == 0 {
-		return nil, nil, ErrRequiredParam("userID")
+		return nil, nil, ErrRequiredParam("userId")
 	}
 	if roleId == 0 {
-		return nil, nil, ErrRequiredParam("roleID")
+		return nil, nil, ErrRequiredParam("roleId")
 	}
 
 	path := fmt.Sprintf("admin/projects/%s/users/%d/roles/%d", projectId, userId, roleId)
@@ -194,40 +194,40 @@ func (p *ProjectsService) UpdateUserRole(projectId string, userId int, roleId in
 	return &updateRoleResponse, resp, nil
 }
 
-func (p *ProjectsService) DeleteUserRole(projectId string, userId int, roleId int) (*Response, error) {
+func (p *ProjectsService) DeleteUserProject(projectId string, userId int, roleId int) (*AddUserRoleResponse, *Response, error) {
 	if projectId == "" {
-		return nil, ErrRequiredParam("projectID")
+		return nil, nil, ErrRequiredParam("projectId")
 	}
 	if userId == 0 {
-		return nil, ErrRequiredParam("userID")
+		return nil, nil, ErrRequiredParam("userId")
 	}
 	if roleId == 0 {
-		return nil, ErrRequiredParam("roleID")
+		return nil, nil, ErrRequiredParam("roleId")
 	}
 
 	path := fmt.Sprintf("admin/projects/%s/users/%d/roles/%d", projectId, userId, roleId)
 	req, err := p.client.newRequest("DELETE", path, nil)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	var deleteResponse Response
+	var deleteResponse AddUserRoleResponse
 	resp, err := p.client.do(req, &deleteResponse)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 	if resp == nil {
-		return nil, errors.New("response is nil")
+		return nil, nil, errors.New("response is nil")
 	}
 
 	if resp.StatusCode != http.StatusOK {
 		var errorResponse ErrorResponse
 		err := json.NewDecoder(resp.Body).Decode(&errorResponse)
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
-		return nil, fmt.Errorf("%s: %s", errorResponse.Error.Name, errorResponse.Error.Message)
+		return nil, nil, fmt.Errorf("%s: %s", errorResponse.Error.Name, errorResponse.Error.Message)
 	}
 
-	return &deleteResponse, nil
+	return &deleteResponse, resp, nil
 }

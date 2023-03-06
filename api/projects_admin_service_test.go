@@ -288,7 +288,7 @@ func TestProjectsService_DeleteProject(t *testing.T) {
 	}
 }
 
-func TestProjectsService_AddUserRole(t *testing.T) {
+func TestProjectsService_AddUserProject(t *testing.T) {
 	httpResponseMocks := make(map[string]*http.Response)
 	httpResponseMocks["success"] = createHttpResponseMock(200, `{"status":"success"}`, "POST")
 	httpResponseMocks["badrequest"] = createHttpResponseMock(404, `{"status":"BadRequestError"}`, "POST")
@@ -343,7 +343,7 @@ func TestProjectsService_AddUserRole(t *testing.T) {
 			return tt.mockedResponse, nil
 		}
 		t.Run(tt.name, func(t *testing.T) {
-			_, _, err := tt.p.AddUserRole(tt.args.userId, tt.args.projectId, tt.args.roleId)
+			_, _, err := tt.p.AddUserProject(tt.args.userId, tt.args.projectId, tt.args.roleId)
 
 			if (err != nil) != tt.wantErr {
 				t.Errorf("ProjectsService.AddUserRole() error = %v, wantErr %v", err, tt.wantErr)
@@ -355,7 +355,7 @@ func TestProjectsService_AddUserRole(t *testing.T) {
 	}
 }
 
-func TestProjectsService_UpdateUserRole(t *testing.T) {
+func TestProjectsService_UpdateUserProject(t *testing.T) {
 	httpResponseMocks := make(map[string]*http.Response)
 	httpResponseMocks["success"] = createHttpResponseMock(200, `{"status":"success"}`, "POST")
 	httpResponseMocks["badrequest"] = createHttpResponseMock(404, `{"status":"BadRequestError"}`, "POST")
@@ -410,10 +410,10 @@ func TestProjectsService_UpdateUserRole(t *testing.T) {
 			return tt.mockedResponse, nil
 		}
 		t.Run(tt.name, func(t *testing.T) {
-			_, _, err := tt.p.AddUserRole(tt.args.UserId, tt.args.ProjectId, tt.args.RoleId)
+			_, _, err := tt.p.UpdateUserProject(tt.args.ProjectId, tt.args.UserId, tt.args.RoleId)
 
 			if (err != nil) != tt.wantErr {
-				t.Errorf("ProjectsService.AddUserRole() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("ProjectsService.UpdateUserProject() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			// no additional checks for now as the response has no body.
@@ -422,10 +422,10 @@ func TestProjectsService_UpdateUserRole(t *testing.T) {
 	}
 }
 
-func TestProjectsService_DeleteUserRole(t *testing.T) {
+func TestProjectsService_DeleteUserProject(t *testing.T) {
 	httpResponseMocks := make(map[string]*http.Response)
 	httpResponseMocks["success"] = createHttpResponseMock(200, `{"status":"success"}`, "POST")
-	httpResponseMocks["badrequest"] = createHttpResponseMock(404, `{"status":"BadRequestError"}`, "POST")
+	httpResponseMocks["badrequest"] = createHttpResponseMock(400, `{"status":"BadRequestError"}`, "POST")
 
 	type args struct {
 		UserId    int
@@ -477,14 +477,15 @@ func TestProjectsService_DeleteUserRole(t *testing.T) {
 			return tt.mockedResponse, nil
 		}
 		t.Run(tt.name, func(t *testing.T) {
-			_, _, err := tt.p.AddUserRole(tt.args.UserId, tt.args.ProjectId, tt.args.RoleId)
+			_, _, err := tt.p.DeleteUserProject(tt.args.ProjectId, tt.args.UserId, tt.args.RoleId)
 
 			if (err != nil) != tt.wantErr {
-				t.Errorf("ProjectsService.AddUserRole() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("ProjectsService.DeleteUserProject() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			// no additional checks for now as the response has no body.
 			// ref: https://docs.getunleash.io/reference/api/legacy/unleash/admin/features-v2#remove-a-user-from-a-project
+
 		})
 	}
 }
