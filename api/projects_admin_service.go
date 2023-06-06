@@ -134,7 +134,7 @@ func (p *ProjectsService) AddUserProject(userId int, projectId string, roleId in
 	}
 
 	path := fmt.Sprintf("admin/projects/%s/users/%d/roles/%d", projectId, userId, roleId)
-	req, err := p.client.newRequest("PUT", path, nil)
+	req, err := p.client.newRequest("POST", path, nil)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -170,7 +170,7 @@ func (p *ProjectsService) UpdateUserProject(projectId string, userId int, roleId
 	}
 
 	path := fmt.Sprintf("admin/projects/%s/users/%d/roles/%d", projectId, userId, roleId)
-	req, err := p.client.newRequest("POST", path, nil)
+	req, err := p.client.newRequest("PUT", path, nil)
 	if err != nil {
 		return nil, nil, err
 	}
