@@ -131,6 +131,95 @@ func TestFeatureTagsService_GetAllFeatureTags(t *testing.T) {
 	}
 }
 
+func TestFeatureTagsService_CreateFeatureTags(t *testing.T) {
+	httpResponseMocks["success"] = createHttpResponseMock(200, `{
+		"version": 1,
+		"tags": [
+			{
+				"value": "feature1",
+				"type": "simple"
+			},
+			{
+				"value": "product1",
+				"type": "simple"
+			}
+		]
+	}`, "POST")
+	httpResponseMocks["badrequest"] = createHttpResponseMock(404, `{"name":"BadRequest"`, "POST")
+	scenarios := []struct {
+		name            string
+		p               *FeatureTagsService
+		args            args
+		mockedResponse  *http.Response
+		wantFeatureTags *FeatureTagsResponse
+		wantResponse    *Response
+		wantErr         bool
+	}{
+		{
+			"ReturnsFeatureTags",
+			featureTagsService,
+			args{
+				featureName: "MyToggle",
+				tags: []FeatureTag{
+					{
+						Type:  "simple",
+						Value: "feature1",
+					},
+					{
+						Type:  "simple",
+						Value: "product1",
+					},
+				},
+			},
+			httpResponseMocks["success"],
+			&FeatureTagsResponse{
+				Version: 1,
+				Types: []FeatureTag{
+					{
+						Type:  "simple",
+						Value: "feature1",
+					},
+					{
+						Type:  "simple",
+						Value: "product1",
+					},
+				},
+			},
+			&Response{Response: httpResponseMocks["success"]},
+			false,
+		},
+		{
+			"ReturnsError",
+			featureTagsService,
+			args{
+				featureName: "UnknownToggle",
+				tags:        []FeatureTag{},
+			},
+			httpResponseMocks["badrequest"],
+			nil,
+			&Response{Response: httpResponseMocks["badrequest"]},
+			true,
+		},
+	}
+	for _, tt := range scenarios {
+		mocks.GetDoFunc = func(*http.Request) (*http.Response, error) {
+			return tt.mockedResponse, nil
+		}
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1, err := tt.p.CreateFeatureTags(tt.args.featureName, tt.args.tags)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("FeatureTagsService.CreateFeatureTags() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
+			if !reflect.DeepEqual(got, tt.wantFeatureTags) {
+				t.Errorf("FeatureTagsService.CreateFeatureTags() got = %v, want %v", got, tt.wantFeatureTags)
+			}
+			if !reflect.DeepEqual(got1, tt.wantResponse) {
+				t.Errorf("FeatureTagsService.CreateFeatureTags() got1 = %v, want %v", got1, tt.wantResponse)
+			}
+		})
+	}
+}
 func TestFeatureTagsService_UpdateFeatureTags(t *testing.T) {
 	httpResponseMocks["success"] = createHttpResponseMock(200, `{
 		"version": 1,

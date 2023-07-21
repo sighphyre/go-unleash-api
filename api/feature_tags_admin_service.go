@@ -26,6 +26,22 @@ func (p *FeatureTagsService) GetAllFeatureTags(featureName string) (*FeatureTags
 	return &featureTags, resp, err
 }
 
+func (p *FeatureTagsService) CreateFeatureTags(featureName string, tags []FeatureTag) (*FeatureTagsResponse, *Response, error) {
+	req, err := p.client.newRequest("admin/features/"+featureName+"/tags", "POST", tags)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	var tagsResponse FeatureTagsResponse
+
+	resp, err := p.client.do(req, &tagsResponse)
+	if err != nil {
+		return nil, resp, err
+	}
+
+	return &tagsResponse, resp, err
+}
+
 func (p *FeatureTagsService) UpdateFeatureTags(featureName string, tags []FeatureTag) (*FeatureTagsResponse, *Response, error) {
 	req, err := p.client.newRequest("admin/features/"+featureName+"/tags", "PUT", tags)
 	if err != nil {
