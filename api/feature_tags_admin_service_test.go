@@ -9,6 +9,15 @@ import (
 	"github.com/philips-labs/go-unleash-api/mocks"
 )
 
+type args struct {
+	featureName string
+	tags        []FeatureTag
+}
+
+var (
+	httpResponseMocks map[string]*http.Response
+)
+
 var (
 	featureTagsService *FeatureTagsService
 )
@@ -22,10 +31,7 @@ func init() {
 		},
 	}
 
-}
-
-func TestFeatureTagsService_GetAllFeatureTags(t *testing.T) {
-	httpResponseMocks := make(map[string]*http.Response)
+	httpResponseMocks = make(map[string]*http.Response)
 	httpResponseMocks["success"] = createHttpResponseMock(200, `{
 		"version": 1,
 		"tags": [
@@ -44,9 +50,9 @@ func TestFeatureTagsService_GetAllFeatureTags(t *testing.T) {
 		"tags": []
 	}`, "GET")
 	httpResponseMocks["badrequest"] = createHttpResponseMock(404, `{"name":"BadRequest"`, "GET")
-	type args struct {
-		featureName string
-	}
+}
+
+func TestFeatureTagsService_GetAllFeatureTags(t *testing.T) {
 	scenarios := []struct {
 		name            string
 		p               *FeatureTagsService
@@ -125,8 +131,7 @@ func TestFeatureTagsService_GetAllFeatureTags(t *testing.T) {
 	}
 }
 
-func TestFeatureTagsService_CreateFeatureTags(t *testing.T) {
-	httpResponseMocks := make(map[string]*http.Response)
+func TestFeatureTagsService_UpdateFeatureTags(t *testing.T) {
 	httpResponseMocks["success"] = createHttpResponseMock(200, `{
 		"version": 1,
 		"tags": [
@@ -141,10 +146,6 @@ func TestFeatureTagsService_CreateFeatureTags(t *testing.T) {
 		]
 	}`, "GET")
 	httpResponseMocks["badrequest"] = createHttpResponseMock(404, `{"name":"BadRequest"`, "GET")
-	type args struct {
-		featureName string
-		tags        []FeatureTag
-	}
 	scenarios := []struct {
 		name            string
 		p               *FeatureTagsService
@@ -205,16 +206,16 @@ func TestFeatureTagsService_CreateFeatureTags(t *testing.T) {
 			return tt.mockedResponse, nil
 		}
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1, err := tt.p.PutFeatureTags(tt.args.featureName, tt.args.tags)
+			got, got1, err := tt.p.UpdateFeatureTags(tt.args.featureName, tt.args.tags)
 			if (err != nil) != tt.wantErr {
-				t.Errorf("FeatureTagsService.PutFeatureTypes() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("FeatureTagsService.UpdateFeatureTags() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 			if !reflect.DeepEqual(got, tt.wantFeatureTags) {
-				t.Errorf("FeatureTagsService.PutFeatureTags() got = %v, want %v", got, tt.wantFeatureTags)
+				t.Errorf("FeatureTagsService.UpdateFeatureTags() got = %v, want %v", got, tt.wantFeatureTags)
 			}
 			if !reflect.DeepEqual(got1, tt.wantResponse) {
-				t.Errorf("FeatureTagsService.PutFeatureTags() got1 = %v, want %v", got1, tt.wantResponse)
+				t.Errorf("FeatureTagsService.UpdateFeatureTags() got1 = %v, want %v", got1, tt.wantResponse)
 			}
 		})
 	}

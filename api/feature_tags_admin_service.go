@@ -26,7 +26,7 @@ func (p *FeatureTagsService) GetAllFeatureTags(featureName string) (*FeatureTags
 	return &featureTags, resp, err
 }
 
-func (p *FeatureTagsService) PutFeatureTags(featureName string, tags []FeatureTag) (*FeatureTagsResponse, *Response, error) {
+func (p *FeatureTagsService) UpdateFeatureTags(featureName string, tags []FeatureTag) (*FeatureTagsResponse, *Response, error) {
 	req, err := p.client.newRequest("admin/features/"+featureName+"/tags", "PUT", tags)
 	if err != nil {
 		return nil, nil, err
