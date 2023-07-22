@@ -42,18 +42,14 @@ func (p *FeatureTagsService) CreateFeatureTags(featureName string, tags []Featur
 	return &tagsResponse, resp, err
 }
 
-func (p *FeatureTagsService) UpdateFeatureTags(featureName string, tags []FeatureTag) (*FeatureTagsResponse, *Response, error) {
-	req, err := p.client.newRequest("admin/features/"+featureName+"/tags", "PUT", tags)
+func (p *FeatureTagsService) DeleteFeatureTags(featureName string, tag FeatureTag) (*Response, error) {
+	req, err := p.client.newRequest("admin/features/"+featureName+"/tags/"+tag.Type+"/"+tag.Value, "DELETE", nil)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
-
-	var tagsResponse FeatureTagsResponse
-
-	resp, err := p.client.do(req, &tagsResponse)
+	resp, err := p.client.do(req, nil)
 	if err != nil {
-		return nil, resp, err
+		return resp, err
 	}
-
-	return &tagsResponse, resp, err
+	return nil, nil
 }
