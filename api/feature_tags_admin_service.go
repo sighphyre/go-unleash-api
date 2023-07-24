@@ -1,5 +1,10 @@
 package api
 
+type UpdateFeatureTagsBody struct {
+	AddedTags   []FeatureTag `json:"addedTags"`
+	RemovedTags []FeatureTag `json:"removedTags"`
+}
+
 type FeatureTagsResponse struct {
 	Version int          `json:"version"`
 	Types   []FeatureTag `json:"tags"`
@@ -43,13 +48,11 @@ func (p *FeatureTagsService) CreateFeatureTags(featureName string, tag FeatureTa
 }
 
 func (p *FeatureTagsService) UpdateFeatureTags(featureName string, addedTags []FeatureTag, removedTags []FeatureTag) (*FeatureTagsResponse, *Response, error) {
-	updateFeatureTagsBody := struct {
-		addedTags   []FeatureTag
-		removedTags []FeatureTag
-	}{
-		addedTags:   addedTags,
-		removedTags: removedTags,
+	updateFeatureTagsBody := UpdateFeatureTagsBody{
+		AddedTags:   addedTags,
+		RemovedTags: removedTags,
 	}
+
 	req, err := p.client.newRequest("admin/features/"+featureName+"/tags", "PUT", updateFeatureTagsBody)
 	if err != nil {
 		return nil, nil, err
