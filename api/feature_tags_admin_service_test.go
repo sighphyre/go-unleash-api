@@ -164,9 +164,12 @@ func TestFeatureTagsService_CreateFeatureTags(t *testing.T) {
 		"message": "The request payload you provided doesn't conform to the schema. The .parameters property should be object. You sent []."
 	}`, http.MethodPost)
 	scenarios := []struct {
-		name            string
-		p               *FeatureTagsService
-		args            args
+		name string
+		p    *FeatureTagsService
+		args struct {
+			featureName string
+			tag         *FeatureTag
+		}
 		mockedResponse  *http.Response
 		wantFeatureTags *FeatureTagsResponse
 		wantResponse    *Response
@@ -175,17 +178,14 @@ func TestFeatureTagsService_CreateFeatureTags(t *testing.T) {
 		{
 			"ReturnsFeatureTags",
 			featureTagsService,
-			args{
+			struct {
+				featureName string
+				tag         *FeatureTag
+			}{
 				featureName: "MyToggle",
-				tags: []FeatureTag{
-					{
-						Type:  "simple",
-						Value: "feature1",
-					},
-					{
-						Type:  "simple",
-						Value: "product1",
-					},
+				tag: &FeatureTag{
+					Type:  "simple",
+					Value: "product1",
 				},
 			},
 			httpResponseMocks["success"],
@@ -208,9 +208,12 @@ func TestFeatureTagsService_CreateFeatureTags(t *testing.T) {
 		{
 			"ReturnsNotFound",
 			featureTagsService,
-			args{
+			struct {
+				featureName string
+				tag         *FeatureTag
+			}{
 				featureName: "UnknownToggle",
-				tags:        []FeatureTag{},
+				tag:         &FeatureTag{},
 			},
 			httpResponseMocks["notfound"],
 			nil,
@@ -220,9 +223,12 @@ func TestFeatureTagsService_CreateFeatureTags(t *testing.T) {
 		{
 			"ReturnsBadRequest",
 			featureTagsService,
-			args{
+			struct {
+				featureName string
+				tag         *FeatureTag
+			}{
 				featureName: "UnknownToggle",
-				tags:        []FeatureTag{},
+				tag:         &FeatureTag{},
 			},
 			httpResponseMocks["badrequest"],
 			nil,
@@ -235,7 +241,7 @@ func TestFeatureTagsService_CreateFeatureTags(t *testing.T) {
 			return tt.mockedResponse, nil
 		}
 		t.Run(tt.name, func(t *testing.T) {
-			bodyResponse, response, err := tt.p.CreateFeatureTags(tt.args.featureName, tt.args.tags)
+			bodyResponse, response, err := tt.p.CreateFeatureTags(tt.args.featureName, *tt.args.tag)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("FeatureTagsService.CreateFeatureTags() error = %v, wantErr %v", err, tt.wantErr)
 				return
