@@ -252,15 +252,10 @@ func TestFeatureTagsService_CreateFeatureTags(t *testing.T) {
 
 func TestFeatureTagsService_UpdateFeatureTags(t *testing.T) {
 	httpResponseMocks["success"] = createHttpResponseMock(http.StatusOK, `{
-		"addedTags": [
+		"version": 1,
+		"tags": [
 			{
 			"value": "tag-to-add",
-			"type": "simple"
-			}
-		],
-		"removedTags": [
-			{
-			"value": "tag-to-remove",
 			"type": "simple"
 			}
 		]
@@ -281,7 +276,7 @@ func TestFeatureTagsService_UpdateFeatureTags(t *testing.T) {
 		p                      *FeatureTagsService
 		args                   updatedTagsArgs
 		mockedResponse         *http.Response
-		wantUpdatedFeatureTags *UpdateFeatureTagsResponse
+		wantUpdatedFeatureTags *FeatureTagsResponse
 		wantResponse           *Response
 		wantErr                bool
 		wantStatusCode         int
@@ -305,17 +300,12 @@ func TestFeatureTagsService_UpdateFeatureTags(t *testing.T) {
 				},
 			},
 			httpResponseMocks["success"],
-			&UpdateFeatureTagsResponse{
-				AddedTags: []FeatureTag{
+			&FeatureTagsResponse{
+				Version: 1,
+				Types: []FeatureTag{
 					{
 						Type:  "simple",
 						Value: "tag-to-add",
-					},
-				},
-				RemovedTags: []FeatureTag{
-					{
-						Type:  "simple",
-						Value: "tag-to-remove",
 					},
 				},
 			},

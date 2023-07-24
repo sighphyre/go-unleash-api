@@ -5,11 +5,6 @@ type FeatureTagsResponse struct {
 	Types   []FeatureTag `json:"tags"`
 }
 
-type UpdateFeatureTagsResponse struct {
-	AddedTags   []FeatureTag `json:"addedTags"`
-	RemovedTags []FeatureTag `json:"removedTags"`
-}
-
 type FeatureTag struct {
 	Type  string `json:"type"`
 	Value string `json:"value"`
@@ -47,7 +42,7 @@ func (p *FeatureTagsService) CreateFeatureTags(featureName string, tags []Featur
 	return &tagsResponse, resp, err
 }
 
-func (p *FeatureTagsService) UpdateFeatureTags(featureName string, addedTags []FeatureTag, removedTags []FeatureTag) (*UpdateFeatureTagsResponse, *Response, error) {
+func (p *FeatureTagsService) UpdateFeatureTags(featureName string, addedTags []FeatureTag, removedTags []FeatureTag) (*FeatureTagsResponse, *Response, error) {
 	updateFeatureTagsBody := struct {
 		addedTags   []FeatureTag
 		removedTags []FeatureTag
@@ -60,7 +55,7 @@ func (p *FeatureTagsService) UpdateFeatureTags(featureName string, addedTags []F
 		return nil, nil, err
 	}
 
-	var updatedTagsResponse UpdateFeatureTagsResponse
+	var updatedTagsResponse FeatureTagsResponse
 
 	resp, err := p.client.do(req, &updatedTagsResponse)
 	if err != nil {
