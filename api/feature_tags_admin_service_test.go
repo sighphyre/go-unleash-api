@@ -79,7 +79,7 @@ func TestFeatureTagsService_GetAllFeatureTags(t *testing.T) {
 			httpResponseMocks["success"],
 			&FeatureTagsResponse{
 				Version: 1,
-				Types: []FeatureTag{
+				Tags: []FeatureTag{
 					{
 						Type:  "simple",
 						Value: "feature1",
@@ -102,7 +102,7 @@ func TestFeatureTagsService_GetAllFeatureTags(t *testing.T) {
 			httpResponseMocks["nocontent"],
 			&FeatureTagsResponse{
 				Version: 1,
-				Types:   []FeatureTag{},
+				Tags:    []FeatureTag{},
 			},
 			&Response{Response: httpResponseMocks["nocontent"]},
 			false,
@@ -141,17 +141,8 @@ func TestFeatureTagsService_GetAllFeatureTags(t *testing.T) {
 
 func TestFeatureTagsService_CreateFeatureTags(t *testing.T) {
 	httpResponseMocks["success"] = createHttpResponseMock(http.StatusOK, `{
-		"version": 1,
-		"tags": [
-			{
-				"value": "feature1",
-				"type": "simple"
-			},
-			{
-				"value": "product1",
-				"type": "simple"
-			}
-		]
+		"value": "feature1",
+		"type": "simple"
 	}`, http.MethodPost)
 	httpResponseMocks["notfound"] = createHttpResponseMock(http.StatusNotFound, `{
 		"id": "9c40958a-daac-400e-98fb-3bb438567008",
@@ -171,7 +162,7 @@ func TestFeatureTagsService_CreateFeatureTags(t *testing.T) {
 			tag         *FeatureTag
 		}
 		mockedResponse  *http.Response
-		wantFeatureTags *FeatureTagsResponse
+		wantFeatureTags *FeatureTag
 		wantResponse    *Response
 		wantErr         bool
 	}{
@@ -185,22 +176,13 @@ func TestFeatureTagsService_CreateFeatureTags(t *testing.T) {
 				featureName: "MyToggle",
 				tag: &FeatureTag{
 					Type:  "simple",
-					Value: "product1",
+					Value: "feature1",
 				},
 			},
 			httpResponseMocks["success"],
-			&FeatureTagsResponse{
-				Version: 1,
-				Types: []FeatureTag{
-					{
-						Type:  "simple",
-						Value: "feature1",
-					},
-					{
-						Type:  "simple",
-						Value: "product1",
-					},
-				},
+			&FeatureTag{
+				Type:  "simple",
+				Value: "feature1",
 			},
 			&Response{Response: httpResponseMocks["success"]},
 			false,
@@ -308,7 +290,7 @@ func TestFeatureTagsService_UpdateFeatureTags(t *testing.T) {
 			httpResponseMocks["success"],
 			&FeatureTagsResponse{
 				Version: 1,
-				Types: []FeatureTag{
+				Tags: []FeatureTag{
 					{
 						Type:  "simple",
 						Value: "tag-to-add",

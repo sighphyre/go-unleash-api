@@ -7,7 +7,7 @@ type UpdateFeatureTagsBody struct {
 
 type FeatureTagsResponse struct {
 	Version int          `json:"version"`
-	Types   []FeatureTag `json:"tags"`
+	Tags    []FeatureTag `json:"tags"`
 }
 
 type FeatureTag struct {
@@ -31,13 +31,13 @@ func (p *FeatureTagsService) GetAllFeatureTags(featureName string) (*FeatureTags
 	return &featureTags, resp, err
 }
 
-func (p *FeatureTagsService) CreateFeatureTags(featureName string, tag FeatureTag) (*FeatureTagsResponse, *Response, error) {
+func (p *FeatureTagsService) CreateFeatureTags(featureName string, tag FeatureTag) (*FeatureTag, *Response, error) {
 	req, err := p.client.newRequest("admin/features/"+featureName+"/tags", "POST", tag)
 	if err != nil {
 		return nil, nil, err
 	}
 
-	var tagsResponse FeatureTagsResponse
+	var tagsResponse FeatureTag
 
 	resp, err := p.client.do(req, &tagsResponse)
 	if err != nil {
