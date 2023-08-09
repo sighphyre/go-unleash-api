@@ -8,11 +8,15 @@ import (
 )
 
 type ProjectDetails struct {
-	Name         string   `json:"name"`
-	Description  string   `json:"description"`
-	Health       int      `json:"health"`
-	UpdatedAt    string   `json:"updatedAt"`
-	Environments []string `json:"environments"`
+	Name         string            `json:"name"`
+	Description  string            `json:"description"`
+	Health       int               `json:"health"`
+	UpdatedAt    string            `json:"updatedAt"`
+	Environments []ProjEnvironment `json:"environments"`
+}
+
+type ProjEnvironment struct {
+	Environment string `json:"environment"`
 }
 
 type Project struct {

@@ -26,7 +26,14 @@ func init() {
 
 func TestProjectsService_GetProjectById(t *testing.T) {
 	httpResponseMocks := make(map[string]*http.Response)
-	httpResponseMocks["success"] = createHttpResponseMock(200, `{"name":"Default","description":"Default project","environments":["development","production"],"features":[]}`, "GET")
+	httpResponseMocks["success"] = createHttpResponseMock(200, `{"name":"Default","description":"Default project","environments":[
+        {
+            "environment": "development"
+        },
+        {
+            "environment": "production"
+        }
+    ],"features":[]}`, "GET")
 	httpResponseMocks["notfound"] = createHttpResponseMock(404, `{"name":"NotFoundError"`, "GET")
 	type args struct {
 		projectId string
@@ -50,7 +57,7 @@ func TestProjectsService_GetProjectById(t *testing.T) {
 			&ProjectDetails{
 				Name:         "Default",
 				Description:  "Default project",
-				Environments: []string{"development", "production"},
+				Environments: []ProjEnvironment{{Environment: "development"}, {Environment: "production"}},
 			},
 			&Response{Response: httpResponseMocks["success"]},
 			false,
