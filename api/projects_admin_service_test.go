@@ -6,7 +6,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/philips-labs/go-unleash-api/mocks"
+	"github.com/sighphyre/go-unleash-api/mocks"
 )
 
 var (
