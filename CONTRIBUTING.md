@@ -122,4 +122,4 @@ from the main (upstream) repository:
 ## <a name="info"></a> Info
 
 [contribute]: CONTRIBUTING.md
-[github]: https://github.com/philips-software/go-unleash-api/issues
+[github]: https://github.com/sighphyre/go-unleash-api/issues
