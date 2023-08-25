@@ -163,6 +163,9 @@ func (c *ApiClient) do(req *http.Request, v interface{}) (*Response, error) {
 			_, err = io.Copy(w, resp.Body)
 		} else {
 			err = json.NewDecoder(resp.Body).Decode(v)
+			if err == io.EOF {
+				err = nil // we got nothing back and that's okay
+			}
 		}
 	}
 

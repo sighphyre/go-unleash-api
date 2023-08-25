@@ -102,7 +102,7 @@ func (p *ProjectsService) DeleteProject(projectId string) (*Response, error) {
 	if projectId == "" {
 		return nil, ErrRequiredParam("projectId")
 	}
-	req, err := p.client.newRequest("DELETE", "admin/projects/"+projectId, nil)
+	req, err := p.client.newRequest("admin/projects/"+projectId, "DELETE", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -115,7 +115,7 @@ func (p *ProjectsService) DeleteProject(projectId string) (*Response, error) {
 	if resp == nil {
 		return nil, errors.New("response is nil")
 	}
-	if resp.StatusCode != http.StatusNoContent {
+	if resp.StatusCode != http.StatusOK {
 		var errorResponse ErrorResponse
 		err := json.NewDecoder(resp.Body).Decode(&errorResponse)
 		if err != nil {

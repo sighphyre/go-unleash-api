@@ -246,7 +246,7 @@ func TestProjectsService_UpdateProject(t *testing.T) {
 
 func TestProjectsService_DeleteProject(t *testing.T) {
 	httpResponseMocks := make(map[string]*http.Response)
-	httpResponseMocks["success"] = createHttpResponseMock(204, "", "DELETE")
+	httpResponseMocks["success"] = createHttpResponseMock(200, "", "DELETE")
 	httpResponseMocks["notfound"] = createHttpResponseMock(404, `{"name":"NotFoundError"}`, "DELETE")
 
 	type args struct {
